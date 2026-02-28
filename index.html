@@ -28,9 +28,7 @@ body {
   transition:opacity 1s ease;
 }
 
-.active {
-  opacity:1;
-}
+.active { opacity:1; }
 
 h1 {
   font-size:70px;
@@ -78,27 +76,29 @@ h2 {
 
 <div id="slides"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
 <script>
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTPnY0Eil58qxwrh7by-TbNSfe_-ektLbbc335mtKbXSVhTT2yVbndET5kqKAgHphA9x_qqx9UYDKRi/pub?output=csv";
+const SHEET_ID = "11Gs3NvnsucIJh6HANXJeTQfqU5BYZK5UoSh037KbBWs";
+const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
 let slides = [];
 let currentIndex = 0;
 let currentDataHash = "";
 
 async function fetchData() {
-  const response = await fetch(SHEET_URL + "&cacheBust=" + Date.now());
+  const response = await fetch(API_URL + "&cacheBust=" + Date.now());
   const text = await response.text();
 
-  return new Promise(resolve => {
-    Papa.parse(text, {
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) {
-        resolve(results.data);
-      }
+  const json = JSON.parse(text.substring(47).slice(0, -2));
+  const rows = json.table.rows;
+
+  const headers = json.table.cols.map(col => col.label);
+
+  return rows.map(r => {
+    let obj = {};
+    r.c.forEach((cell, i) => {
+      obj[headers[i]] = cell ? cell.v : "";
     });
+    return obj;
   });
 }
 
@@ -111,7 +111,7 @@ function buildSlides(data) {
     .filter(b => b.TapNumber)
     .sort((a,b)=> Number(a.TapNumber) - Number(b.TapNumber));
 
-  // TITLE SLIDE
+  // Title Slide
   container.innerHTML += `
     <div class="slide">
       <h1>WELCOME TO</h1>
@@ -123,7 +123,7 @@ function buildSlides(data) {
     </div>
   `;
 
-  // WHAT'S ON TAP SLIDE
+  // On Tap Slide
   const onTap = data.filter(b => b.Status === "On Tap");
 
   let tapHTML = onTap.map(b => `
@@ -140,7 +140,7 @@ function buildSlides(data) {
     </div>
   `;
 
-  // FEATURE SLIDES
+  // Feature Slides
   const features = data.filter(b => b.Feature === "TRUE");
 
   features.forEach(b => {
