@@ -78,9 +78,10 @@ h2 {
 
 <div id="slides"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
 <script>
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTPnY0Eil58qxwrh7by-TbNSfe_-ektLbbc335mtKbXSVhTT2yVbndET5kqKAgHphA9x_qqx9UYDKRi/pub?output=csv";
-
 
 let slides = [];
 let currentIndex = 0;
@@ -89,16 +90,15 @@ let currentDataHash = "";
 async function fetchData() {
   const response = await fetch(SHEET_URL + "&cacheBust=" + Date.now());
   const text = await response.text();
-  return parseCSV(text);
-}
 
-function parseCSV(data) {
-  const rows = data.trim().split("\n").map(r => r.split(","));
-  const headers = rows.shift();
-  return rows.map(row => {
-    let obj = {};
-    headers.forEach((h,i)=> obj[h.trim()] = row[i]?.trim());
-    return obj;
+  return new Promise(resolve => {
+    Papa.parse(text, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        resolve(results.data);
+      }
+    });
   });
 }
 
@@ -107,9 +107,11 @@ function buildSlides(data) {
   const container = document.getElementById("slides");
   container.innerHTML = "";
 
-  data.sort((a,b)=> Number(a.TapNumber) - Number(b.TapNumber));
+  data = data
+    .filter(b => b.TapNumber)
+    .sort((a,b)=> Number(a.TapNumber) - Number(b.TapNumber));
 
-  // Title Slide
+  // TITLE SLIDE
   container.innerHTML += `
     <div class="slide">
       <h1>WELCOME TO</h1>
@@ -121,7 +123,7 @@ function buildSlides(data) {
     </div>
   `;
 
-  // On Tap Slide
+  // WHAT'S ON TAP SLIDE
   const onTap = data.filter(b => b.Status === "On Tap");
 
   let tapHTML = onTap.map(b => `
@@ -138,7 +140,7 @@ function buildSlides(data) {
     </div>
   `;
 
-  // Feature Slides
+  // FEATURE SLIDES
   const features = data.filter(b => b.Feature === "TRUE");
 
   features.forEach(b => {
@@ -154,9 +156,11 @@ function buildSlides(data) {
   });
 
   slides = document.querySelectorAll(".slide");
+  currentIndex = 0;
 }
 
 function showNextSlide() {
+  if (!slides.length) return;
   slides.forEach(s => s.classList.remove("active"));
   slides[currentIndex].classList.add("active");
   currentIndex = (currentIndex + 1) % slides.length;
@@ -177,7 +181,7 @@ async function init() {
   currentDataHash = JSON.stringify(data);
   buildSlides(data);
   slides = document.querySelectorAll(".slide");
-  slides[0].classList.add("active");
+  if (slides.length) slides[0].classList.add("active");
   setInterval(showNextSlide, 8000);
   setInterval(refreshData, 10000);
 }
