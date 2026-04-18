@@ -53,7 +53,7 @@
      SLIDE 1 — BRANDING / WELCOME
   ══════════════════════════════════════════ */
   #slide-brand {
-    background: var(--cream);
+    background: #EDE9E0 !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -62,7 +62,7 @@
   }
   /* ── Brand slide ── */
   #slide-brand {
-    background: var(--cream);
+    background: #EDE9E0 !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -71,11 +71,12 @@
   }
   #slide-brand .brand-top {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 13vw;
+    font-size: 12vw;
     color: var(--red);
     line-height: 0.88;
     text-align: center;
     letter-spacing: 0.02em;
+    padding: 0 4vw;
   }
   #slide-brand .brand-logo {
     margin: 2.5vh 0;
@@ -125,7 +126,7 @@
      SLIDE 2 — TAP LIST
   ══════════════════════════════════════════ */
   #slide-taplist {
-    background: var(--cream);
+    background: #EDE9E0 !important;
     display: flex;
     flex-direction: column;
     padding: 4vh 6vw;
@@ -261,7 +262,7 @@
      SLIDE 3 — BEER SPOTLIGHT
   ══════════════════════════════════════════ */
   #slide-spotlight {
-    background: var(--dark);
+    background: #111111 !important;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -380,12 +381,13 @@
      SLIDE 4 — COMING SOON
   ══════════════════════════════════════════ */
   #slide-coming-soon {
-    background: var(--cream);
+    background: #EDE9E0 !important;
     display: flex;
     flex-direction: column;
-    padding: 5vh 7vw;
+    padding: 5vh 8vw;
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
   }
 
   .coming-header {
@@ -401,6 +403,7 @@
     font-size: 7vw;
     color: var(--red);
     line-height: 1;
+    overflow: hidden;
   }
   .coming-header .coming-sub {
     font-family: 'Barlow Condensed', sans-serif;
@@ -569,22 +572,22 @@
 <div class="slide" id="slide-spotlight">
   <img id="spotlight-image" src="" alt="Beer spotlight">
   <div class="spotlight-eyebrow">— FEATURED BREW —</div>
-  <div class="spotlight-name" id="spot-name">GUNSLINGER</div>
-  <div class="spotlight-style" id="spot-style">Imperial Porter</div>
+  <div class="spotlight-name" id="spot-name"></div>
+  <div class="spotlight-style" id="spot-style"></div>
   <div class="spotlight-stats-row">
     <div class="spotlight-stat-box">
       <div class="spotlight-stat-label">ABV</div>
-      <div class="spotlight-stat-value" id="spot-abv">10.0%</div>
+      <div class="spotlight-stat-value" id="spot-abv"></div>
     </div>
     <div class="spotlight-stat-box">
       <div class="spotlight-stat-label">IBU</div>
-      <div class="spotlight-stat-value" id="spot-ibu">60</div>
+      <div class="spotlight-stat-value" id="spot-ibu"></div>
     </div>
   </div>
-  <div class="spotlight-desc" id="spot-desc">Bold, dark, and not afraid to show it. Spent 11 months resting in rye whiskey barrels, layering rich notes of spice, toasted oak, and warm vanilla over a deep, velvety porter base.</div>
+  <div class="spotlight-desc" id="spot-desc"></div>
   <div class="spotlight-tap-badge">
     <div class="badge-label">TAP</div>
-    <div class="badge-num" id="spot-tap">1</div>
+    <div class="badge-num" id="spot-tap"></div>
   </div>
   <div class="spotlight-big-bg" id="spot-bg-text">GUNSLINGER</div>
 </div>
